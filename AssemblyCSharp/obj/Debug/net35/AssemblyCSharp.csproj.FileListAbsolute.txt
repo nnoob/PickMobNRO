@@ -1,0 +1,6 @@
+C:\Users\pk9r\DataPX\NRO\Mod\PickMob\AssemblyCSharp\bin\Debug\net35\Assembly-CSharp.dll
+C:\Users\pk9r\DataPX\NRO\Mod\PickMob\AssemblyCSharp\bin\Debug\net35\UnityEngine.dll
+C:\Users\pk9r\DataPX\NRO\Mod\PickMob\AssemblyCSharp\obj\Debug\net35\AssemblyCSharp.csprojAssemblyReference.cache
+C:\Users\pk9r\DataPX\NRO\Mod\PickMob\AssemblyCSharp\obj\Debug\net35\AssemblyCSharp.csproj.CoreCompileInputs.cache
+C:\Users\pk9r\DataPX\NRO\Mod\PickMob\AssemblyCSharp\obj\Debug\net35\AssemblyCSharp.csproj.CopyComplete
+C:\Users\pk9r\DataPX\NRO\Mod\PickMob\AssemblyCSharp\obj\Debug\net35\Assembly-CSharp.dll
