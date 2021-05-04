@@ -144,7 +144,13 @@ namespace AssemblyCSharp.Mod.PickMob
 
         private static bool FilterItemPick(ItemMap itemMap)
         {
-            return Pk9rPickMob.IdItemPicks.Count == 0 || Pk9rPickMob.IdItemPicks.Contains(itemMap.template.id);
+            if (Pk9rPickMob.IdItemPicks.Count != 0 && !Pk9rPickMob.IdItemPicks.Contains(itemMap.template.id))
+                return false;
+
+            if (Pk9rPickMob.IdItemBlocks.Count != 0 && Pk9rPickMob.IdItemBlocks.Contains(itemMap.template.id))
+                return false;
+
+            return true;
         }
 
         private static bool IsMyItem(ItemMap itemMap)
