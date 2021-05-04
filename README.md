@@ -4,6 +4,7 @@ Hỗ trợ tự động đánh quái và tự động nhặt vật phẩm
 
 ***Lưu ý:***
 - Tự động đánh quái sẽ không né siêu quái khi bật TDLT
+- Tự động nhặt mà có bật TDLT sẽ dịch chuyển tới vật phẩm để nhặt
 - Chỉ nhặt ngọc chỉ là cài đặt lại danh sách lọc vật phẩm của tự động nhặt, tắt cài đặt chỉ nhặt ngọc dùng lệnh "clri" bộ lọc được đặt lại về mặc định (nhặt tất cả vật phẩm).
 
 ## Lệnh chat
