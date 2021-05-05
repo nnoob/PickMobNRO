@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace AssemblyCSharp.Mod.PickMob
 {
@@ -13,6 +14,8 @@ namespace AssemblyCSharp.Mod.PickMob
 
         public static bool IsAutoPickItem;
         public static bool IsItemMe = true;
+        public static bool IsLimitTimesPickItem = true;
+        public static int TimesAutoPickItemMax = 7;
         public static List<int> IdItemPicks = new();
         public static List<int> IdItemBlocks = new();
 
@@ -27,6 +30,20 @@ namespace AssemblyCSharp.Mod.PickMob
             {
                 IsItemMe = !IsItemMe;
                 GameScr.info1.addInfo("Lọc không nhặt vật phẩm của người khác: " + (IsItemMe ? "Bật" : "Tắt"), 0);
+            }
+            else if (text == "sln")
+            {
+                IsLimitTimesPickItem = !IsLimitTimesPickItem;
+                StringBuilder builder = new();
+                builder.Append("Giới hạn số lần nhặt là ");
+                builder.Append(TimesAutoPickItemMax);
+                builder.Append(IsLimitTimesPickItem ? ": Bật" : ": Tắt");
+                GameScr.info1.addInfo(builder.ToString(), 0);
+            }
+            else if (IsGetInfoChat<int>(text, "sln"))
+            {
+                TimesAutoPickItemMax = GetInfoChat<int>(text, "sln");
+                GameScr.info1.addInfo("Số lần nhặt giới hạn là: " + TimesAutoPickItemMax, 0);
             }
             else if (IsGetInfoChat<int>(text, "addt"))
             {
@@ -157,6 +174,25 @@ namespace AssemblyCSharp.Mod.PickMob
             else
             {
                 return false;
+            }
+            return true;
+        }
+
+        public static bool HotKeys()
+        {
+            switch (GameCanvas.keyAsciiPress)
+            {
+                case 't':
+                    Chat("ts");
+                    break;
+                case 'n':
+                    Chat("anhat");
+                    break;
+                case 'a':
+                    Chat("add");
+                    break;
+                default:
+                    return false;
             }
             return true;
         }

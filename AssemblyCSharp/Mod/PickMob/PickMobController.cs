@@ -121,6 +121,9 @@ namespace AssemblyCSharp.Mod.PickMob
             if (Pk9rPickMob.IsItemMe && !IsMyItem(itemMap))
                 return false;
 
+            if (itemMap.countAutoPick > Pk9rPickMob.TimesAutoPickItemMax)
+                return false;
+
             if (GetTpyeDistanceItem(itemMap) == TpyeDistanceItem.CannotPickItem)
                 return false;
 

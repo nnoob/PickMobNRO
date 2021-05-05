@@ -2668,6 +2668,7 @@ public class GameScr : mScreen, IChatable
 						{
 							ChatTextField.gI().startChat(this, string.Empty);
 						}
+						else if (Pk9rPickMob.HotKeys()) { }
 					}
 					else if (!GameCanvas.isMoveNumberPad)
 					{
