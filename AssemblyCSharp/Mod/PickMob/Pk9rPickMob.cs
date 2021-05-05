@@ -16,8 +16,8 @@ namespace AssemblyCSharp.Mod.PickMob
         public static bool IsItemMe = true;
         public static bool IsLimitTimesPickItem = true;
         public static int TimesAutoPickItemMax = 7;
-        public static List<int> IdItemPicks = new();
-        public static List<int> IdItemBlocks = new();
+        public static List<short> IdItemPicks = new();
+        public static List<short> IdItemBlocks = new();
 
         public static bool Chat(string text)
         {
@@ -45,18 +45,30 @@ namespace AssemblyCSharp.Mod.PickMob
                 TimesAutoPickItemMax = GetInfoChat<int>(text, "sln");
                 GameScr.info1.addInfo("Số lần nhặt giới hạn là: " + TimesAutoPickItemMax, 0);
             }
-            else if (IsGetInfoChat<int>(text, "addt"))
+            else if (IsGetInfoChat<short>(text, "addt"))
             {
-                int id = GetInfoChat<int>(text, "addt");
+                short id = GetInfoChat<short>(text, "addt");
                 if (IdItemPicks.Contains(id))
                 {
                     IdItemPicks.Remove(id);
-                    GameScr.info1.addInfo("Đã xoá item: " + id, 0);
+                    StringBuilder builder = new();
+                    builder.Append("Đã xoá item: ");
+                    builder.Append(ItemTemplates.get(id).name);
+                    builder.Append("[");
+                    builder.Append(id);
+                    builder.Append("]");
+                    GameScr.info1.addInfo(builder.ToString(), 0);
                 }
                 else
                 {
                     IdItemPicks.Add(id);
-                    GameScr.info1.addInfo("Đã thêm item: " + id, 0);
+                    StringBuilder builder = new();
+                    builder.Append("Đã thêm item: ");
+                    builder.Append(ItemTemplates.get(id).name);
+                    builder.Append("[");
+                    builder.Append(id);
+                    builder.Append("]");
+                    GameScr.info1.addInfo(builder.ToString(), 0);
                 }
             }
             else if (text == "blocki")
@@ -67,12 +79,24 @@ namespace AssemblyCSharp.Mod.PickMob
                     if (IdItemBlocks.Contains(itemMap.template.id))
                     {
                         IdItemBlocks.Remove(itemMap.template.id);
-                        GameScr.info1.addInfo("Đã bỏ chặn item: " + itemMap.template.id, 0);
+                        StringBuilder builder = new();
+                        builder.Append("Đã bỏ chặn item: ");
+                        builder.Append(itemMap.template.name);
+                        builder.Append("[");
+                        builder.Append(itemMap.template.id);
+                        builder.Append("]");
+                        GameScr.info1.addInfo(builder.ToString(), 0);
                     }
                     else
                     {
                         IdItemBlocks.Add(itemMap.template.id);
-                        GameScr.info1.addInfo("Đã chặn item: " + itemMap.template.id, 0);
+                        StringBuilder builder = new();
+                        builder.Append("Đã chặn item: ");
+                        builder.Append(itemMap.template.name);
+                        builder.Append("[");
+                        builder.Append(itemMap.template.id);
+                        builder.Append("]");
+                        GameScr.info1.addInfo(builder.ToString(), 0);
                     }
                 }
                 else
@@ -80,18 +104,30 @@ namespace AssemblyCSharp.Mod.PickMob
                     GameScr.info1.addInfo("Cần trỏ vào vật phẩm cần chặn khi auto nhặt", 0);
                 }
             }    
-            else if (IsGetInfoChat<int>(text, "blocki"))
+            else if (IsGetInfoChat<short>(text, "blocki"))
             {
-                int id = GetInfoChat<int>(text, "blocki");
+                short id = GetInfoChat<short>(text, "blocki");
                 if (IdItemBlocks.Contains(id))
                 {
                     IdItemBlocks.Remove(id);
-                    GameScr.info1.addInfo("Đã bỏ chặn item: " + id, 0);
+                    StringBuilder builder = new();
+                    builder.Append("Đã bỏ chặn item: ");
+                    builder.Append(ItemTemplates.get(id).name);
+                    builder.Append("[");
+                    builder.Append(id);
+                    builder.Append("]");
+                    GameScr.info1.addInfo(builder.ToString(), 0);
                 }
                 else
                 {
                     IdItemBlocks.Add(id);
-                    GameScr.info1.addInfo("Đã chặn item: " + id, 0);
+                    StringBuilder builder = new();
+                    builder.Append("Đã chặn item: ");
+                    builder.Append(ItemTemplates.get(id).name);
+                    builder.Append("[");
+                    builder.Append(id);
+                    builder.Append("]");
+                    GameScr.info1.addInfo(builder.ToString(), 0);
                 }
             }
             else if (text == "cnn")
@@ -158,12 +194,24 @@ namespace AssemblyCSharp.Mod.PickMob
                     if (IdItemPicks.Contains(itemMap.template.id))
                     {
                         IdItemPicks.Remove(itemMap.template.id);
-                        GameScr.info1.addInfo("Đã xoá item: " + itemMap.template.id, 0);
+                        StringBuilder builder = new();
+                        builder.Append("Đã xoá item: ");
+                        builder.Append(itemMap.template.name);
+                        builder.Append("[");
+                        builder.Append(itemMap.template.id);
+                        builder.Append("]");
+                        GameScr.info1.addInfo(builder.ToString(), 0);
                     }
                     else
                     {
                         IdItemPicks.Add(itemMap.template.id);
-                        GameScr.info1.addInfo("Đã thêm item: " + itemMap.template.id, 0);
+                        StringBuilder builder = new();
+                        builder.Append("Đã thêm item: ");
+                        builder.Append(itemMap.template.name);
+                        builder.Append("[");
+                        builder.Append(itemMap.template.id);
+                        builder.Append("]");
+                        GameScr.info1.addInfo(builder.ToString(), 0);
                     }
                 }
                 else
