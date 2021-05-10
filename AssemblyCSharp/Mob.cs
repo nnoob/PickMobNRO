@@ -492,7 +492,7 @@ public class Mob : IMapObject
 
 	public virtual void update()
 	{
-		Pk9rPickMob.ResetCountDieMob(this);
+		Pk9rPickMob.UpdateCountDieMob(this);
 		if (blindEff && GameCanvas.gameTick % 5 == 0)
 		{
 			ServerEffect.addServerEffect(113, x, y, 1);

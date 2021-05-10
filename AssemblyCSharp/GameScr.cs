@@ -3651,7 +3651,10 @@ public class GameScr : mScreen, IChatable
 
 	private void autoPlay()
 	{
-		if (timeSkill > 0)
+		#region Pk9rEdit GameScr.autoPlay()
+		return;
+        #endregion
+        if (timeSkill > 0)
 		{
 			timeSkill--;
 		}

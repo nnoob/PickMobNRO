@@ -10,6 +10,7 @@ namespace AssemblyCSharp.Mod.PickMob
         private const int TIME_REPICKITEM = 500;
         private const int TIME_DELAY_TANSAT = 500;
         private const int ID_ICON_ITEM_TDLT = 4387;
+        private static readonly sbyte[] IdSkillsBase = { 0, 2, 17, 4 };
         private static readonly sbyte[] IdSkillsCannotAttack = 
             { 10, 11, 14, 23, 7 };
 
@@ -30,7 +31,8 @@ namespace AssemblyCSharp.Mod.PickMob
             if (Char.myCharz().statusMe == 14 || Char.myCharz().cHP <= 0)
                 return;
 
-            if (Pk9rPickMob.IsAutoPickItem)
+            bool isUseTDLT = ItemTime.isExistItem(ID_ICON_ITEM_TDLT);
+            if (Pk9rPickMob.IsAutoPickItem && (!Pk9rPickMob.IsTanSat || !isUseTDLT))
             {
                 if (IsPickingItem)
                 {
@@ -49,18 +51,25 @@ namespace AssemblyCSharp.Mod.PickMob
                                 Char.myCharz().cx = itemMap.xEnd;
                                 Char.myCharz().cy = itemMap.yEnd;
                                 Service.gI().charMove();
-                                break;
+                                Service.gI().pickItem(itemMap.itemMapID);
+                                itemMap.countAutoPick++;
+                                IndexItemPick++;
+                                Wait(TIME_REPICKITEM);
+                                return;
                             case TpyeDistanceItem.PickItemTanSat:
                                 Char.myCharz().currentMovePoint = new MovePoint(itemMap.xEnd, itemMap.yEnd);
                                 Char.myCharz().mobFocus = null;
                                 Wait(TIME_REPICKITEM);
                                 return;
+                            case TpyeDistanceItem.PickItemNormal:
+                                Service.gI().charMove();
+                                Service.gI().pickItem(itemMap.itemMapID);
+                                itemMap.countAutoPick++;
+                                IndexItemPick++;
+                                Wait(TIME_REPICKITEM);
+                                return;
                         }
-                        Service.gI().pickItem(itemMap.itemMapID);
-                        Wait(TIME_REPICKITEM);
                     }
-                    IndexItemPick++;
-                    return;
                 }
 
                 ItemPicks.Clear();
@@ -82,6 +91,12 @@ namespace AssemblyCSharp.Mod.PickMob
 
             if (Pk9rPickMob.IsTanSat)
             {
+                if (Char.myCharz().isCharge)
+                {
+                    Wait(TIME_DELAY_TANSAT);
+                    return;
+                }
+
                 Char myChar = Char.myCharz();
                 myChar.clearFocus(0);
 
@@ -89,24 +104,38 @@ namespace AssemblyCSharp.Mod.PickMob
                     myChar.mobFocus = null;
 
                 if (myChar.mobFocus == null)
+                {
                     myChar.mobFocus = GetMobTanSat();
+                    if (isUseTDLT && myChar.mobFocus != null)
+                    {
+                        myChar.cx = myChar.mobFocus.xFirst - 24;
+                        myChar.cy = myChar.mobFocus.yFirst;
+                        Service.gI().charMove();
+                    }    
+                }
 
                 if (myChar.mobFocus != null)
                 {
-                    Skill skill = GetSkillAttack();
-                    if (skill != null)
+                    if (myChar.skillInfoPaint() == null)
                     {
-                        Mob mobFocus = Char.myCharz().mobFocus;
-                        mobFocus.x = mobFocus.xFirst;
-                        mobFocus.y = mobFocus.yFirst;
-                        GameScr.gI().doSelectSkill(skill, true);
-                        GameScr.gI().MyDoDoubleClickToObj(mobFocus);
+                        Skill skill = GetSkillAttack();
+                        if (skill != null && !skill.paintCanNotUseSkill)
+                        {
+                            Mob mobFocus = myChar.mobFocus;
+                            mobFocus.x = mobFocus.xFirst;
+                            mobFocus.y = mobFocus.yFirst;
+                            GameScr.gI().doSelectSkill(skill, true);
+                            GameScr.gI().MyDoDoubleClickToObj(mobFocus);
+                        }
                     }
                 }
-                else
+                else if (!isUseTDLT)
                 {
-                    Mob mob = GetMobRevive();
-                    Char.myCharz().currentMovePoint = new MovePoint(mob.xFirst, mob.yFirst);
+                    Mob mob = GetMobNext();
+                    if (mob != null)
+                    {
+                        myChar.currentMovePoint = new MovePoint(mob.xFirst, mob.yFirst);
+                    }
                 }
                 Wait(TIME_DELAY_TANSAT);
             }
@@ -190,7 +219,7 @@ namespace AssemblyCSharp.Mod.PickMob
             return mobDmin;
         }
 
-        private static Mob GetMobRevive()
+        private static Mob GetMobNext()
         {
             Mob mobTmin = null;
             long tmin = mSystem.currentTimeMillis();
@@ -225,32 +254,75 @@ namespace AssemblyCSharp.Mod.PickMob
             if (!FilterMobTanSat(mob) || mob.isMobMe)
                 return false;
 
-            if ((mob.countDie == 10 || mob.levelBoss != 0) && Pk9rPickMob.IsNeSieuQuai && !ItemTime.isExistItem(ID_ICON_ITEM_TDLT))
-                return false;
-
+            if (Pk9rPickMob.IsNeSieuQuai && !ItemTime.isExistItem(ID_ICON_ITEM_TDLT) && mob.getTemplate().hp >= 3000)
+            {
+                if (mob.levelBoss != 0)
+                {
+                    Mob mobNextSieuQuai = null;
+                    for (int i = 0; i < GameScr.vMob.size(); i++)
+                    {
+                        mobNextSieuQuai = (Mob)GameScr.vMob.elementAt(i);
+                        if (mobNextSieuQuai.countDie == 10 && (mobNextSieuQuai.status == 0 || mobNextSieuQuai.status == 1))
+                        {
+                            break;
+                        }
+                    }
+                    if (mobNextSieuQuai.countDie == 10 && (mobNextSieuQuai.status == 0 || mobNextSieuQuai.status == 1))
+                    {
+                        mob.timeLastDie = mobNextSieuQuai.timeLastDie;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                if (mob.countDie == 10 && (mob.status == 0 || mob.status == 1))
+                {
+                    return false;
+                }
+            }
             return true;
         }
 
         private static bool FilterMobTanSat(Mob mob)
         {
-            return Pk9rPickMob.IdMobsTanSat.Count == 0 || Pk9rPickMob.IdMobsTanSat.Contains(mob.mobId);
+            if (Pk9rPickMob.IdMobsTanSat.Count != 0 && !Pk9rPickMob.IdMobsTanSat.Contains(mob.mobId))
+                return false;
+
+            if (Pk9rPickMob.TypeMobsTanSat.Count != 0 && !Pk9rPickMob.TypeMobsTanSat.Contains(mob.templateId))
+                return false;
+
+            return true;
         }
 
         private static Skill GetSkillAttack()
         {
             Skill skill = null;
-            for (int i = 0; i < GameScr.keySkill.Length; i++)
-                if (IsSkillBetter(GameScr.keySkill[i], skill))
-                    skill = GameScr.keySkill[i];
+            Skill nextSkill;
+            SkillTemplate skillTemplate = new();
+            foreach (var id in Pk9rPickMob.IdSkillsTanSat)
+            {
+                skillTemplate.id = id;
+                nextSkill = Char.myCharz().getSkill(skillTemplate);
+                if (IsSkillBetter(nextSkill, skill))
+                {
+                    skill = nextSkill;
+                }
+            }
             return skill;
         }
 
         public static bool IsSkillBetter(Skill SkillBetter, Skill skill)
         {
-            if (SkillBetter == null || !CanUseSkill(SkillBetter))
+            if (SkillBetter == null || Char.myCharz().skillInfoPaint() != null)
                 return false;
 
-            if (skill != null && skill.coolDown >= SkillBetter.coolDown)
+            if (!CanUseSkill(SkillBetter))
+                return false;
+
+            bool isPrioritize = (SkillBetter.template.id == 17 && skill.template.id == 2) ||
+                (SkillBetter.template.id == 9 && skill.template.id == 0);
+            if (skill != null && skill.coolDown >= SkillBetter.coolDown && !isPrioritize)
                 return false;
 
             return true;
@@ -258,7 +330,10 @@ namespace AssemblyCSharp.Mod.PickMob
 
         private static bool CanUseSkill(Skill skill)
         {
-            if (skill.paintCanNotUseSkill || Char.myCharz().skillInfoPaint() != null)
+            if (mSystem.currentTimeMillis() - skill.lastTimeUseThisSkill > skill.coolDown)
+                skill.paintCanNotUseSkill = false;
+
+            if (skill.paintCanNotUseSkill && !IdSkillsBase.Contains(skill.template.id))
                 return false;
 
             if (IdSkillsCannotAttack.Contains(skill.template.id))
