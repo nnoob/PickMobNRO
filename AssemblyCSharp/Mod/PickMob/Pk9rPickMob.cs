@@ -172,18 +172,18 @@ namespace AssemblyCSharp.Mod.PickMob
                     GameScr.info1.addInfo("Đã thêm mob: " + id, 0);
                 }
             }
-            else if (IsGetInfoChat<int>(text, "adddm"))
+            else if (IsGetInfoChat<int>(text, "addtm"))
             {
-                int id = GetInfoChat<int>(text, "adddm");
+                int id = GetInfoChat<int>(text, "addtm");
                 if (TypeMobsTanSat.Contains(id))
                 {
                     TypeMobsTanSat.Remove(id);
-                    GameScr.info1.addInfo("Đã xoá loại mob: " + id, 0);
+                    GameScr.info1.addInfo($"Đã xoá loại mob: {Mob.arrMobTemplate[id].name}[{id}]", 0);
                 }
                 else
                 {
                     TypeMobsTanSat.Add(id);
-                    GameScr.info1.addInfo("Đã thêm loại mob: " + id, 0);
+                    GameScr.info1.addInfo($"Đã thêm loại mob: {Mob.arrMobTemplate[id].name}[{id}]", 0);
                 }
             }
             else if (text == "clrm")
@@ -284,13 +284,13 @@ namespace AssemblyCSharp.Mod.PickMob
                 {
                     if (TypeMobsTanSat.Contains(mob.templateId))
                     {
-                        TypeMobsTanSat.Remove(mob.mobId);
-                        GameScr.info1.addInfo("Đã xoá loại mob: " + mob.templateId, 0);
+                        TypeMobsTanSat.Remove(mob.templateId);
+                        GameScr.info1.addInfo($"Đã xoá loại mob: {mob.getTemplate().name}[{mob.templateId}]", 0);
                     }
                     else
                     {
-                        TypeMobsTanSat.Add(mob.mobId);
-                        GameScr.info1.addInfo("Đã thêm loại mob: " + mob.templateId, 0);
+                        TypeMobsTanSat.Add(mob.templateId);
+                        GameScr.info1.addInfo($"Đã thêm loại mob: {mob.getTemplate().name}[{mob.templateId}]", 0);
                     }
                 }
                 else if (itemMap != null)
