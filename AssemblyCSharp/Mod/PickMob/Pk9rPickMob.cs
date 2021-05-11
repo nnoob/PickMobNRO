@@ -17,7 +17,7 @@ namespace AssemblyCSharp.Mod.PickMob
         public static List<int> TypeMobsTanSat = new();
         public static List<sbyte> IdSkillsTanSat = new(IdSkillsBase);
 
-        public static bool IsAutoPickItem;
+        public static bool IsAutoPickItems;
         public static bool IsItemMe = true;
         public static bool IsLimitTimesPickItem = true;
         public static int TimesAutoPickItemMax = 7;
@@ -30,8 +30,8 @@ namespace AssemblyCSharp.Mod.PickMob
         {
             if (text == "anhat")
             {
-                IsAutoPickItem = !IsAutoPickItem;
-                GameScr.info1.addInfo("Tự động nhặt vật phẩm: " + (IsAutoPickItem ? "Bật" : "Tắt"), 0);
+                IsAutoPickItems = !IsAutoPickItems;
+                GameScr.info1.addInfo("Tự động nhặt vật phẩm: " + (IsAutoPickItems ? "Bật" : "Tắt"), 0);
             }
             else if (text == "itm")
             {
@@ -42,7 +42,7 @@ namespace AssemblyCSharp.Mod.PickMob
             {
                 IsLimitTimesPickItem = !IsLimitTimesPickItem;
                 StringBuilder builder = new();
-                builder.Append("Giới hạn số lần nhặt là ");
+                builder.Append($"Giới hạn số lần nhặt là ");
                 builder.Append(TimesAutoPickItemMax);
                 builder.Append(IsLimitTimesPickItem ? ": Bật" : ": Tắt");
                 GameScr.info1.addInfo(builder.ToString(), 0);
@@ -190,7 +190,7 @@ namespace AssemblyCSharp.Mod.PickMob
             {
                 IdMobsTanSat.Clear();
                 TypeMobsTanSat.Clear();
-                GameScr.info1.addInfo("Đã xoá tất cả mob tàn sát", 0);
+                GameScr.info1.addInfo("Đã xoá danh sách đánh quái", 0);
             }
             else if (text == "skill")
             {
