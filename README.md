@@ -19,6 +19,7 @@ Hỗ trợ tự động nhặt vật phẩm và tự động đánh quái
 - Liên hoàn được ưu tiên sử dụng hơn Chiêu đấm Demon (namec) trong tự động đánh quái. Nếu Liên hoàn không thể sử dụng thì mới sử dụng Chiêu đấm Demon (thiếu KI, chưa học skill)
 - Kaioken được ưu tiên sử dụng hơn Chiêu đấm Dragon (Trái đất) trong tự động đánh quái. Nếu Kaioken không thể sử dụng thì mới sử dụng Chiêu đấm Dragon (thiếu KI, thiếu HP, chưa học skill) (Chưa làm)
 - Các skill Quả cầu kênh khi, Makankosappo, Tự phát nổ, Trói, Trị thương không thể sử dụng trong tự động đánh quái
+- Tự động đánh quái chỉ có thể vượt địa hình đơn giản (mấy map phức tạp bật TDLT hoặc add quái nhé). Nếu vượt địa hình lỗi thì dùng lệnh "vdh" để tắt.
 
 ## Lệnh chat
 - add (trỏ vào quái hay vật phẩm): Thêm/Xoá quái hoặc vật phẩm ở danh sách tương ứng
@@ -34,6 +35,10 @@ Hỗ trợ tự động nhặt vật phẩm và tự động đánh quái
 - skill***X***: Thêm vào/Xoá khỏi danh sách skill sử dụng tự động đánh quái skill thứ ***X*** (***X*** là thứ tự skill)
 - skillid***X***: Thêm vào/Xoá khỏi danh sách skill sử dụng tự động đánh quái skill id ***X*** (***X*** là id skill)
 - clrs: Đặt danh sách skill sử dụng tự động đánh quái về mặc định
+- abf: Bật/Tắt tự động sử dụng đậu thần (KI, HP dưới 20%)
+- abf***X***: Bật tự động sử dụng đậu thần khi HP dưới ***X***%
+- abf***X*** ***Y***: Bật tự động sử dụng đậu thần khi HP dưới ***X***%, KI dưới ***Y***%
+- vdh: Bật/Tắt vượt địa hình (mặc định Bật)
 
 ### Lệnh tự động nhặt vật phẩm
 - anhat: Bật/Tắt tự động nhặt vật phẩm

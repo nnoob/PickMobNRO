@@ -14,6 +14,8 @@ namespace AssemblyCSharp.Mod.PickMob
         private static readonly sbyte[] IdSkillsCanNotAttack = 
             { 10, 11, 14, 23, 7 };
 
+        private static readonly PickMobController _Instance = new();
+
         public static bool IsPickingItems;
 
         private static bool IsWait;
@@ -28,8 +30,13 @@ namespace AssemblyCSharp.Mod.PickMob
             if (IsWaiting())
                 return;
 
-            if (Char.myCharz().statusMe == 14 || Char.myCharz().cHP <= 0)
+            Char myChar = Char.myCharz();
+
+            if (myChar.statusMe == 14 || myChar.cHP <= 0)
                 return;
+
+            if (myChar.cHP <= myChar.cHPFull * Pk9rPickMob.HpBuff / 100 || myChar.cMP <= myChar.cMPFull * Pk9rPickMob.MpBuff / 100)
+                GameScr.gI().doUseHP();
 
             bool isUseTDLT = ItemTime.isExistItem(ID_ICON_ITEM_TDLT);
             bool isTanSatTDLT = Pk9rPickMob.IsTanSat && isUseTDLT;
@@ -46,8 +53,8 @@ namespace AssemblyCSharp.Mod.PickMob
                     switch (GetTpyePickItem(itemMap))
                     {
                         case TpyePickItem.PickItemTDLT:
-                            Char.myCharz().cx = itemMap.xEnd;
-                            Char.myCharz().cy = itemMap.yEnd;
+                            myChar.cx = itemMap.xEnd;
+                            myChar.cy = itemMap.yEnd;
                             Service.gI().charMove();
                             Service.gI().pickItem(itemMap.itemMapID);
                             itemMap.countAutoPick++;
@@ -55,8 +62,8 @@ namespace AssemblyCSharp.Mod.PickMob
                             Wait(TIME_REPICKITEM);
                             return;
                         case TpyePickItem.PickItemTanSat:
-                            Char.myCharz().currentMovePoint = new MovePoint(itemMap.xEnd, itemMap.yEnd);
-                            Char.myCharz().mobFocus = null;
+                            Move(itemMap.xEnd, itemMap.yEnd);
+                            myChar.mobFocus = null;
                             Wait(TIME_REPICKITEM);
                             return;
                         case TpyePickItem.PickItemNormal:
@@ -65,6 +72,9 @@ namespace AssemblyCSharp.Mod.PickMob
                             itemMap.countAutoPick++;
                             IndexItemPick++;
                             Wait(TIME_REPICKITEM);
+                            return;
+                        case TpyePickItem.CanNotPickItem:
+                            IndexItemPick++;
                             return;
                     }
                 }
@@ -87,12 +97,11 @@ namespace AssemblyCSharp.Mod.PickMob
 
             if (Pk9rPickMob.IsTanSat)
             {
-                if (Char.myCharz().isCharge)
+                if (myChar.isCharge)
                 {
                     Wait(TIME_DELAY_TANSAT);
                     return;
                 }
-                Char myChar = Char.myCharz();
                 myChar.clearFocus(0);
                 if (myChar.mobFocus != null && !IsMobTanSat(myChar.mobFocus))
                     myChar.mobFocus = null;
@@ -117,7 +126,14 @@ namespace AssemblyCSharp.Mod.PickMob
                             mobFocus.x = mobFocus.xFirst;
                             mobFocus.y = mobFocus.yFirst;
                             GameScr.gI().doSelectSkill(skill, true);
-                            GameScr.gI().MyDoDoubleClickToObj(mobFocus);
+                            if (Res.distance(mobFocus.xFirst, mobFocus.yFirst, myChar.cx, myChar.cy) <= 48)
+                            {
+                                GameScr.gI().MyDoDoubleClickToObj(mobFocus);
+                            }
+                            else
+                            {
+                                Move(mobFocus.xFirst , mobFocus.yFirst);
+                            }
                         }
                     }
                 }
@@ -126,11 +142,28 @@ namespace AssemblyCSharp.Mod.PickMob
                     Mob mob = GetMobNext();
                     if (mob != null)
                     {
-                        myChar.currentMovePoint = new MovePoint(mob.xFirst - 24, mob.yFirst);
+                        Move(mob.xFirst - 24, mob.yFirst);
                     }
                 }
                 Wait(TIME_DELAY_TANSAT);
             }
+        }
+
+        private static void Move(int x, int y)
+        {
+            Char myChar = Char.myCharz();
+            if (!Pk9rPickMob.IsVuotDiaHinh)
+            {
+                myChar.currentMovePoint = new MovePoint(x, y);
+                return;
+            }
+            int[] vs = GetPointYsdMax(myChar.cx, x);
+            if (vs[1] >= y || (vs[1] >= myChar.cy && myChar.statusMe == 2))
+            {
+                vs[0] = x;
+                vs[1] = y;
+            }    
+            myChar.currentMovePoint = new MovePoint(vs[0], vs[1]);
         }
 
         #region Get data pick item
@@ -342,6 +375,60 @@ namespace AssemblyCSharp.Mod.PickMob
                 return (skill.manaUse * Char.myCharz().cMPFull / 100);
             else
                 return skill.manaUse;
+        }
+
+        private static int GetYsd(int xsd)
+        {
+            Char myChar = Char.myCharz();
+            int dmin = TileMap.pxh;
+            int d;
+            int ysdBest = -1;
+            for (int i = 24; i < TileMap.pxh; i += 24)
+            {
+                if (TileMap.tileTypeAt(xsd, i, 2))
+                {
+                    d = Res.abs(i - myChar.cy);
+                    if (d < dmin)
+                    {
+                        dmin = d;
+                        ysdBest = i;
+                    }    
+                }    
+            }
+            return ysdBest;
+        }
+
+        private static int[] GetPointYsdMax(int xStart, int xEnd)
+        {
+            int ysdMin = TileMap.pxh;
+            int x = -1;
+
+            if (xStart > xEnd)
+            {
+                for (int i = xEnd; i < xStart; i += 24)
+                {
+                    int ysd = GetYsd(i);
+                    if (ysd < ysdMin)
+                    {
+                        ysdMin = ysd;
+                        x = i;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = xEnd; i > xStart; i -= 24)
+                {
+                    int ysd = GetYsd(i);
+                    if (ysd < ysdMin)
+                    {
+                        ysdMin = ysd;
+                        x = i;
+                    }
+                }
+            }
+            int[] vs = { x, ysdMin };
+            return vs;
         }
         #endregion
 
