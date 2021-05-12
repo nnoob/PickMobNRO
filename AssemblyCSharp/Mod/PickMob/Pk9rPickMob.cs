@@ -7,6 +7,7 @@ namespace AssemblyCSharp.Mod.PickMob
     public class Pk9rPickMob
     {
         private const int ID_ITEM_GEM = 77;
+        private const int ID_ITEM_GEM_LOCK = 861;
         private const int DEFAULT_HP_BUFF = 20;
         private const int DEFAULT_MP_BUFF = 20;
         private static readonly sbyte[] IdSkillsBase = {0, 2, 17, 4};
@@ -222,6 +223,7 @@ namespace AssemblyCSharp.Mod.PickMob
                 IdItemBlocks.Clear();
                 IdItemBlocks.AddRange(IdItemBlockBase);
                 IdItemPicks.Add(ID_ITEM_GEM);
+                IdItemPicks.Add(ID_ITEM_GEM_LOCK);
                 GameScr.info1.addInfo("Đã cài đặt chỉ nhặt ngọc", 0);
             }
             else if (text =="ts")
