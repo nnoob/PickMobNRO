@@ -57,6 +57,7 @@ Hỗ trợ tự động nhặt vật phẩm và tự động đánh quái. Nếu
 - T: Bật/Tắt tự động đánh quái
 - N: Bật/Tắt tự động nhặt vật phẩm
 - A: Tương ứng lệnh chat "add"
+- B: Tương ứng lệnh chat "abf"
 
 ## Danh sách mặc định
 ### Danh sách tự động nhặt vật phẩm
