@@ -2,6 +2,7 @@
  
 Hỗ trợ tự động nhặt vật phẩm và tự động đánh quái. Nếu các bạn có sử dụng source của mình để làm bản mod khác mình hi vọng có đề cập tới mình trong chức năng này.
 
+Hướng dẫn cài đặt: https://youtu.be/CHnGEqVQE2I
 ## Lưu ý
 ### Sử dụng item tự động luyện tập (TDLT)
 - Tự động đánh quái sẽ không né siêu quái khi bật TDLT
