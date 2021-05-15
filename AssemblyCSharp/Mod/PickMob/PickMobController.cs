@@ -158,7 +158,7 @@ namespace AssemblyCSharp.Mod.PickMob
                 return;
             }
             int[] vs = GetPointYsdMax(myChar.cx, x);
-            if (vs[1] >= y || (vs[1] >= myChar.cy && myChar.statusMe == 2))
+            if (vs[1] >= y || (vs[1] >= myChar.cy && (myChar.statusMe == 2 || myChar.statusMe == 1)))
             {
                 vs[0] = x;
                 vs[1] = y;
