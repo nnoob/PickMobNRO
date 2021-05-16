@@ -21,7 +21,7 @@ namespace AssemblyCSharp.Mod.PickMob
         public static List<int> TypeMobsTanSat = new();
         public static List<sbyte> IdSkillsTanSat = new(IdSkillsBase);
 
-        public static bool IsAutoPickItems;
+        public static bool IsAutoPickItems = true;
         public static bool IsItemMe = true;
         public static bool IsLimitTimesPickItem = true;
         public static int TimesAutoPickItemMax = 7;

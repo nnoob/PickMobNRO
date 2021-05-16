@@ -42,7 +42,7 @@ Hướng dẫn cài đặt: https://youtu.be/CHnGEqVQE2I
 - vdh: Bật/Tắt vượt địa hình (mặc định Bật)
 
 ### Lệnh tự động nhặt vật phẩm
-- anhat: Bật/Tắt tự động nhặt vật phẩm
+- anhat: Bật/Tắt tự động nhặt vật phẩm (Mặc định bật)
 - itm: Bật/Tắt lọc không nhặt vật phẩm của người khác (Mặc định bật)
 - sln: Bật/Tắt giới hạn số lần tự động nhặt một vật phẩm (Mặc định bật)
 - sln***X***: Thay đổi giới hạn số lần nhặt là ***X*** (Mặc định ***X*** = 7)
